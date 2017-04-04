@@ -1,3 +1,3 @@
 # sf-mta
-visualizing public transportation in SF
+visualizing public transportation in SF. [See it online here.](http://olias.fr/sf-mta)
 ![alt tag](http://olias.fr/sf-mta/sf-mta.jpg)
