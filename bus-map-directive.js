@@ -82,25 +82,30 @@ busApp.directive('busMap', function(){
 				scope.$broadcast("mapsDrawn");
 		 }
 		 scope.$on('mapsDrawn', function(){
-			 drawMaps = true;
+			 drawnMaps = true;
 		});
 
 		// When a new nextBus feed comes in, this fires
 		scope.$watch('data', function(data){
-			if(!data && !drawnMaps) return;
-			console.log("new data should load, unfortunately it won't");
-			d3.selectAll('circle.bus').html('');
+			console.log(drawnMaps);
+			console.log(typeof data=="object")
+			console.log(typeof data=="object" && drawnMaps);
+			if(typeof data=="object" && drawnMaps){
+				console.log("new data should load, unfortunately it won't affect the view");
+				d3.selectAll('circle.bus').html('');
 
-			gBuses = gBuses.selectAll('circle')
-				.data(data.vehicle);
+				gBuses = gBuses.selectAll('circle')
+					.data(data.vehicle);
 
-			var gBus = gBuses.enter()
-				.append('circle')
-				.attr('class', 'bus')
-				.attr('cx', function(d){return projection(d.startPosition)[0]})
-				.attr('cy', function(d){return projection(d.startPosition)[1]})
-				.attr('r', 2)
-				.attr('fill', 'red');
+				var gBus = gBuses.enter()
+					.append('circle')
+					.attr('class', 'bus')
+					.attr('cx', function(d){return projection(d.startPosition)[0]})
+					.attr('cy', function(d){return projection(d.startPosition)[1]})
+					.attr('r', 2)
+					.attr('fill', 'red');
+			}
+
 		});
 
 	}
