@@ -87,9 +87,6 @@ busApp.directive('busMap', function(){
 
 		// When a new nextBus feed comes in, this fires
 		scope.$watch('data', function(data){
-			console.log(drawnMaps);
-			console.log(typeof data=="object")
-			console.log(typeof data=="object" && drawnMaps);
 			if(typeof data=="object" && drawnMaps){
 				console.log("new data should load, unfortunately it won't affect the view");
 				d3.selectAll('circle.bus').html('');
