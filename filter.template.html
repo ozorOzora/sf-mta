@@ -1,0 +1,6 @@
+<div class="filter-container" routes="routesData">
+	<div ng-click="toggle()"> {{count}} routes selected ▾</div>
+	<div class="scroll-filters" ng-show="showOptions">
+		<label ng-repeat="option in options"><input type="checkbox" ng-model="selected[$index]" ng-change="update()"/>{{option}}<br/></label>
+	</div>
+</div>

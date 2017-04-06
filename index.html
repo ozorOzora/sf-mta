@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.min.js"></script>
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="https://d3js.org/d3-selection-multi.v0.4.min.js"></script>
+		<script src="https://d3js.org/topojson.v1.min.js"></script>
+		<style>
+		body,html{
+			margin:0;
+			height: 100%;
+			width: 100%;
+			font-family: monospace;
+			font-size: 10pt;
+		}
+		sf-map, bus-map{
+			display: block;
+			overflow: hidden;
+			height: 100%;
+			width:100%;
+			background-color: #04121d;
+		}
+		.filter-container{
+			color:#ace5e5;
+			position:fixed;
+			margin:10px;
+			padding:7px;
+			border: solid 1px #10544d;
+			border-bottom: solid 3px #10544d;
+		}
+		.scroll-filters{
+			font-weight: normal;
+			font-size: 9pt;
+			max-height: 600px;
+			overflow-y: scroll;
+			margin-top:5px;
+			background-color: black;
+		}
+		.scroll-filters input{
+			vertical-align: middle;
+		}
+		</style>
+	</head>
+	<body ng-app="busApp">
+		<sf-map>
+		</sf-map>
+	</body>
+	<script src="bus-service.js"></script>
+	<script src="sf-map-directive.js"></script>
+	<script src="bus-map-directive.js"></script>
+	<script src="bus-filter-directive.js"></script>
+</html>
