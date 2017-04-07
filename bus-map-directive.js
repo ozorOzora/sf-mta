@@ -1,13 +1,14 @@
 busApp.directive('busMap', function(){
 	return{
 		restrict: 'E',
-		scope: { data: "="},
+		scope: { data: "=", filteredBuses: "="},
 		controller: controller,
 		link: link,
 	};
 
 	function controller($scope, $window, $rootScope){
-		console.log($scope);
+		console.log($rootScope);
+
 
 		// We load two GEOjson
 		d3.json('data/streets.json', function(err, streets){
@@ -89,46 +90,48 @@ busApp.directive('busMap', function(){
 			 drawnMaps = true;
 		});
 
-		var listener = scope.$watch('data', function(data){
-			!d3.select('g.route').size() ? initBuses(data):updateBuses(data);
+		//scope.$watch('filteredRoutes', function(data){console.log(scope)}, true);
+		scope.$watch('data', function(data){
+			if(!data) return;
+			scope.filteredBuses = data.filter( d => { return scope.$parent.filteredRoutes.indexOf(d.routeTag)!=-1 });
+
+		});
+		scope.$watch('filteredBuses', function(filteredBuses){
+			!d3.select('circle').size() ? initBuses(scope.filteredBuses):updateBuses(scope.filteredBuses);
 		}, true);
 
 		function initBuses(data){
 			if(typeof data!="object" || !drawnMaps) return;
-			gBuses = gBuses.selectAll('g.route')
-				.data(data, d=>{return d ? d.key : this.id}).enter().append('g')
-					.attr('class', 'route')
-					.attr('id', d =>{return d.key});
+			var Buses = gBuses.selectAll('circle')
+				.data(data, d=>{return d ? d.id : this.id}).enter().append('circle')
+					.attr('class', 'bus')
+					.attr('id', d =>{return d.id})
+					.attr('cx', function(d){return projection([d.lon,0])[0]})
+					.attr('cy', function(d){return projection([0,d.lat])[1]})
+					.attr('r', 2)
+					.attr('fill', 'orange');
+		}
 
-			gBuses.selectAll('circle')
-				.data(d =>{ return d.values }, d=>{return d? d.id : this.id})
-				.enter().append('circle')
+		function updateBuses(data){
+			console.log(data);
+			var Buses = gBuses.selectAll('circle')
+				.data(data, d => { return d ? d.id : this.id});
+
+			Buses.exit().remove();
+
+			Buses
+				.transition()
+            .duration(1000)
+			  	.attr('cx', function(d){return projection([d.lon,0])[0]})
+			 	.attr('cy', function(d){return projection([0,d.lat])[1]});
+
+			Buses.enter().append('circle')
 				.attr('class', 'bus')
 				.attr('id', d =>{return d.id})
 				.attr('cx', function(d){return projection([d.lon,0])[0]})
 				.attr('cy', function(d){return projection([0,d.lat])[1]})
-				.attr('r', 1.5)
-				.attr('fill', 'red');
-		}
-
-		function updateBuses(data){
-			//console.log(data);
-
-
-			gBuses.selectAll('g.route')
-				.data(data, d => {return d ? d.key : this.id});
-
-			gBuses.enter().append('g')
-				.attr('class', 'route')
-				.attr('id', d => { return d.key});
-			gBuses.exit().remove();
-
-			gBuses.selectAll('circle')
-				.data( (d,i) => {return data[i].values; }, d=>{return d? d.id : this.id})
-				.transition()  // Transition from old to new
-            .duration(1000)
-			  	.attr('cx', function(d){return projection([d.lon,0])[0]})
-			 	.attr('cy', function(d){return projection([0,d.lat])[1]});
+				.attr('r', 2)
+				.attr('fill', 'orange');
 		}
 	}
 });

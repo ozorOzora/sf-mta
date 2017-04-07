@@ -13,7 +13,7 @@ busApp.directive('sfMap', function(BusService){
 			$interval(function thisInterval(){
 				BusService.getBuses()
 					.then(function(response){
-						$scope.busData = sortByRoute(response.vehicle);
+						$scope.busData = response.vehicle;
 					});
 				return thisInterval;
 			}(), 8000);
@@ -24,7 +24,5 @@ busApp.directive('sfMap', function(BusService){
 		return d3.nest()
 			.key(function(d) {return d.routeTag})
 			.entries(data);
-	}
-
-
+	};
 })
